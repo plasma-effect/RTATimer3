@@ -34,5 +34,77 @@ namespace Timer.Properties {
                 this["DefaultPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int Target0 {
+            get {
+                return ((int)(this["Target0"]));
+            }
+            set {
+                this["Target0"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int Target1 {
+            get {
+                return ((int)(this["Target1"]));
+            }
+            set {
+                this["Target1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int Target2 {
+            get {
+                return ((int)(this["Target2"]));
+            }
+            set {
+                this["Target2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("4")]
+        public int Target3 {
+            get {
+                return ((int)(this["Target3"]));
+            }
+            set {
+                this["Target3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int DefaultCategory {
+            get {
+                return ((int)(this["DefaultCategory"]));
+            }
+            set {
+                this["DefaultCategory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int DefaultRoute {
+            get {
+                return ((int)(this["DefaultRoute"]));
+            }
+            set {
+                this["DefaultRoute"] = value;
+            }
+        }
     }
 }
