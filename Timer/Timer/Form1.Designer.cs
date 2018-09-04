@@ -40,7 +40,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.personalBest = new System.Windows.Forms.Label();
-            this.sobs = new System.Windows.Forms.Label();
+            this.sumOfBestSegments = new System.Windows.Forms.Label();
             this.previousSegmentLabel = new System.Windows.Forms.Label();
             this.previousTotal = new System.Windows.Forms.Label();
             this.previousSegment = new System.Windows.Forms.Label();
@@ -52,6 +52,8 @@
             this.targetName1 = new System.Windows.Forms.Label();
             this.targetName2 = new System.Windows.Forms.Label();
             this.targetName3 = new System.Windows.Forms.Label();
+            this.bestPossibleTime = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // mainTimer
@@ -134,7 +136,7 @@
             this.label2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("MS UI Gothic", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label2.Location = new System.Drawing.Point(12, 461);
+            this.label2.Location = new System.Drawing.Point(12, 402);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(273, 43);
             this.label2.TabIndex = 7;
@@ -145,7 +147,7 @@
             this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("MS UI Gothic", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.label3.Location = new System.Drawing.Point(12, 547);
+            this.label3.Location = new System.Drawing.Point(12, 488);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(436, 43);
             this.label3.TabIndex = 8;
@@ -156,28 +158,29 @@
             this.personalBest.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.personalBest.AutoSize = true;
             this.personalBest.Font = new System.Drawing.Font("MS UI Gothic", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.personalBest.Location = new System.Drawing.Point(63, 504);
+            this.personalBest.Location = new System.Drawing.Point(63, 445);
             this.personalBest.Name = "personalBest";
             this.personalBest.Size = new System.Drawing.Size(222, 43);
             this.personalBest.TabIndex = 9;
             this.personalBest.Text = "0:00:00.000";
             // 
-            // sobs
+            // sumOfBestSegments
             // 
-            this.sobs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.sobs.AutoSize = true;
-            this.sobs.Font = new System.Drawing.Font("MS UI Gothic", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.sobs.Location = new System.Drawing.Point(63, 590);
-            this.sobs.Name = "sobs";
-            this.sobs.Size = new System.Drawing.Size(222, 43);
-            this.sobs.TabIndex = 10;
-            this.sobs.Text = "0:00:00.000";
+            this.sumOfBestSegments.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.sumOfBestSegments.AutoSize = true;
+            this.sumOfBestSegments.Font = new System.Drawing.Font("MS UI Gothic", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.sumOfBestSegments.Location = new System.Drawing.Point(63, 531);
+            this.sumOfBestSegments.Name = "sumOfBestSegments";
+            this.sumOfBestSegments.Size = new System.Drawing.Size(222, 43);
+            this.sumOfBestSegments.TabIndex = 10;
+            this.sumOfBestSegments.Text = "0:00:00.000";
             // 
             // previousSegmentLabel
             // 
+            this.previousSegmentLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.previousSegmentLabel.AutoSize = true;
             this.previousSegmentLabel.Font = new System.Drawing.Font("MS UI Gothic", 10.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.previousSegmentLabel.Location = new System.Drawing.Point(411, 106);
+            this.previousSegmentLabel.Location = new System.Drawing.Point(475, 108);
             this.previousSegmentLabel.Name = "previousSegmentLabel";
             this.previousSegmentLabel.Size = new System.Drawing.Size(218, 27);
             this.previousSegmentLabel.TabIndex = 11;
@@ -185,9 +188,10 @@
             // 
             // previousTotal
             // 
+            this.previousTotal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.previousTotal.AutoSize = true;
             this.previousTotal.Font = new System.Drawing.Font("MS UI Gothic", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.previousTotal.Location = new System.Drawing.Point(451, 134);
+            this.previousTotal.Location = new System.Drawing.Point(472, 135);
             this.previousTotal.Name = "previousTotal";
             this.previousTotal.Size = new System.Drawing.Size(178, 43);
             this.previousTotal.TabIndex = 12;
@@ -195,9 +199,10 @@
             // 
             // previousSegment
             // 
+            this.previousSegment.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.previousSegment.AutoSize = true;
             this.previousSegment.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.previousSegment.Location = new System.Drawing.Point(635, 144);
+            this.previousSegment.Location = new System.Drawing.Point(656, 144);
             this.previousSegment.Name = "previousSegment";
             this.previousSegment.Size = new System.Drawing.Size(132, 33);
             this.previousSegment.TabIndex = 13;
@@ -205,9 +210,10 @@
             // 
             // prevTarget0
             // 
+            this.prevTarget0.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.prevTarget0.AutoSize = true;
             this.prevTarget0.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.prevTarget0.Location = new System.Drawing.Point(497, 176);
+            this.prevTarget0.Location = new System.Drawing.Point(474, 175);
             this.prevTarget0.Name = "prevTarget0";
             this.prevTarget0.Size = new System.Drawing.Size(132, 33);
             this.prevTarget0.TabIndex = 14;
@@ -215,9 +221,10 @@
             // 
             // prevTarget1
             // 
+            this.prevTarget1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.prevTarget1.AutoSize = true;
             this.prevTarget1.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.prevTarget1.Location = new System.Drawing.Point(497, 209);
+            this.prevTarget1.Location = new System.Drawing.Point(474, 208);
             this.prevTarget1.Name = "prevTarget1";
             this.prevTarget1.Size = new System.Drawing.Size(132, 33);
             this.prevTarget1.TabIndex = 15;
@@ -225,9 +232,10 @@
             // 
             // prevTarget2
             // 
+            this.prevTarget2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.prevTarget2.AutoSize = true;
             this.prevTarget2.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.prevTarget2.Location = new System.Drawing.Point(497, 242);
+            this.prevTarget2.Location = new System.Drawing.Point(474, 241);
             this.prevTarget2.Name = "prevTarget2";
             this.prevTarget2.Size = new System.Drawing.Size(132, 33);
             this.prevTarget2.TabIndex = 16;
@@ -235,9 +243,10 @@
             // 
             // prevTarget3
             // 
+            this.prevTarget3.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.prevTarget3.AutoSize = true;
             this.prevTarget3.Font = new System.Drawing.Font("MS UI Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            this.prevTarget3.Location = new System.Drawing.Point(497, 275);
+            this.prevTarget3.Location = new System.Drawing.Point(474, 274);
             this.prevTarget3.Name = "prevTarget3";
             this.prevTarget3.Size = new System.Drawing.Size(132, 33);
             this.prevTarget3.TabIndex = 17;
@@ -283,11 +292,33 @@
             this.targetName3.Text = "Balanced Time";
             this.targetName3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
+            // bestPossibleTime
+            // 
+            this.bestPossibleTime.AutoSize = true;
+            this.bestPossibleTime.Font = new System.Drawing.Font("MS UI Gothic", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.bestPossibleTime.Location = new System.Drawing.Point(63, 351);
+            this.bestPossibleTime.Name = "bestPossibleTime";
+            this.bestPossibleTime.Size = new System.Drawing.Size(222, 43);
+            this.bestPossibleTime.TabIndex = 25;
+            this.bestPossibleTime.Text = "0:00:00.000";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("MS UI Gothic", 16.125F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label1.Location = new System.Drawing.Point(12, 308);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(367, 43);
+            this.label1.TabIndex = 26;
+            this.label1.Text = "Best Possible Time";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(771, 642);
+            this.ClientSize = new System.Drawing.Size(800, 583);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.bestPossibleTime);
             this.Controls.Add(this.targetName3);
             this.Controls.Add(this.targetName2);
             this.Controls.Add(this.targetName1);
@@ -299,7 +330,7 @@
             this.Controls.Add(this.previousSegment);
             this.Controls.Add(this.previousTotal);
             this.Controls.Add(this.previousSegmentLabel);
-            this.Controls.Add(this.sobs);
+            this.Controls.Add(this.sumOfBestSegments);
             this.Controls.Add(this.personalBest);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -331,7 +362,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label personalBest;
-        private System.Windows.Forms.Label sobs;
+        private System.Windows.Forms.Label sumOfBestSegments;
         private System.Windows.Forms.Label previousSegmentLabel;
         private System.Windows.Forms.Label previousTotal;
         private System.Windows.Forms.Label previousSegment;
@@ -343,6 +374,8 @@
         private System.Windows.Forms.Label targetName1;
         private System.Windows.Forms.Label targetName2;
         private System.Windows.Forms.Label targetName3;
+        private System.Windows.Forms.Label bestPossibleTime;
+        private System.Windows.Forms.Label label1;
     }
 }
 

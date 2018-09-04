@@ -59,9 +59,15 @@ namespace Timer
         }
 
         const string fmt = @"h\:mm\:ss\.f";
+        const string sfmt = @"h\:mm\:ss\.fff";
         public static string SpanToString(TimeSpan? span)
         {
             return span?.ToString(fmt) ?? "-:--:--.-";
+        }
+
+        public static string StrictSpanToString(TimeSpan? span)
+        {
+            return span?.ToString(sfmt) ?? "-:--:--.---";
         }
 
         public static TimeSpan?[] CumSum(TimeSpan?[] ar)

@@ -6,10 +6,10 @@
       <Value Profile="(Default)">default.bin</Value>
     </Setting>
     <Setting Name="Target0" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">2</Value>
+      <Value Profile="(Default)">0</Value>
     </Setting>
     <Setting Name="Target1" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">5</Value>
+      <Value Profile="(Default)">1</Value>
     </Setting>
     <Setting Name="Target2" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">3</Value>
