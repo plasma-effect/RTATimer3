@@ -58,6 +58,7 @@ namespace Timer
             }
         }
 
+        const string ft = @"h\:mm\:ss";
         const string fmt = @"h\:mm\:ss\.f";
         const string sfmt = @"h\:mm\:ss\.fff";
         public static string SpanToString(TimeSpan? span)
@@ -68,6 +69,11 @@ namespace Timer
         public static string StrictSpanToString(TimeSpan? span)
         {
             return span?.ToString(sfmt) ?? "-:--:--.---";
+        }
+
+        public static string ShortSpanToString(TimeSpan? span)
+        {
+            return span?.ToString(ft) ?? "-:--:--";
         }
 
         public static TimeSpan?[] CumSum(TimeSpan?[] ar)
@@ -100,6 +106,20 @@ namespace Timer
             {
                 yield return (v, ++index);
             }
+        }
+
+        public static T Clamp<T>(T val, T min, T max)
+            where T : IComparable
+        {
+            if (val.CompareTo(min) < 0)
+            {
+                val = min;
+            }
+            if (max.CompareTo(val) < 0)
+            {
+                val = max;
+            }
+            return val;
         }
     }
 }

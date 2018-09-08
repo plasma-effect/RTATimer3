@@ -222,6 +222,15 @@ namespace Timer
             this.MyRecords.Add(route);
             return this.MyRecords.Count - 1;
         }
+
+        public int RouteCount
+        {
+            get
+            {
+                return this.MyRecords.Count;
+            }
+        }
+
     }
 
     /// <summary>
@@ -259,6 +268,14 @@ namespace Timer
         {
             this.CategoryRecords.Add(category);
             return this.CategoryRecords.Count - 1;
+        }
+
+        public int CategoryCount
+        {
+            get
+            {
+                return this.CategoryRecords.Count;
+            }
         }
     }
     

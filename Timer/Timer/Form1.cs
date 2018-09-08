@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Runtime.Serialization;
+using static Timer.Utility;
 
 namespace Timer
 {
@@ -77,7 +78,12 @@ namespace Timer
 
             public void TimeSet(int index, TimeSpan?[] record)
             {
-                if (index == record.Length)
+                if (record is null || index != record.Length)
+                {
+                    this.current.Text = SpanToString(this.target[index]);
+                    SetNormalColorLabel(this.current);
+                }
+                else
                 {
                     if (this.prevflag == TimeSpanFlag.None)
                     {
@@ -90,11 +96,6 @@ namespace Timer
                         diff -= record[index - 2];
                     }
                     TextSet(this.current, diff);
-                }
-                else
-                {
-                    this.current.Text = Utility.SpanToString(this.target[index]);
-                    Utility.SetNormalColorLabel(this.current);
                 }
                 if (this.prevflag != TimeSpanFlag.None)
                 {
@@ -111,6 +112,29 @@ namespace Timer
                 }
             }
         }
+
+        Stopwatch stopwatch;
+        TimeSpan prev;
+        Label[] targetNames;
+        Label[] targetCurrent;
+        Label[] targetPrevious;
+        TargetLabels[] targetLabels;
+        TargetType[] targettypes;
+        GameRecord records;
+        TimeSpan?[] running;
+        int category;
+        int route;
+        TimeSpan?[] mypb;
+        TimeSpan?[] mysb;
+        TimeSpan?[] myssb;
+        TimeSpan?[] balanced;
+        TimeSpan?[] goal;
+        TimeSpan? goaltime;
+        int nowsegment;
+        int segmentCount;
+        DateTime start;
+        string[] segmentNames;
+        TimeSpan segprev;
 
         enum TargetType
         {
@@ -164,37 +188,55 @@ namespace Timer
             };
             this.targetLabels = new TargetLabels[4];
             this.records = RecordTest.MakeTestData("test", 3, 500, 3000, "First", "Second", "Last");//LoadFile(Properties.Settings.Default.DefaultPath);
-            this.category = 0;//Math.Max(0, Math.Min(this.records.CategoryRecords.Count - 1, Properties.Settings.Default.DefaultCategory));
-            this.route = 1;// Math.Max(0, Math.Min(this.records[this.category].MyRecords.Count - 1, Properties.Settings.Default.DefaultRoute));
+            ReadyRecord();
             UpdatePB();
             TargetSet();
         }
 
-        private void UpdatePB()
+        /// <summary>
+        /// 各種記録にアクセスする準備をする
+        /// </summary>
+        private void ReadyRecord()
         {
+            this.category = Clamp(Properties.Settings.Default.DefaultCategory, 0, this.records.CategoryCount - 1);
+            this.route = Clamp(Properties.Settings.Default.DefaultRoute, 0, this.records[this.category].RouteCount - 1);
+            this.segmentCount = this.records[this.category][this.route].SegmentCount;
+            this.segmentNames = this.records[this.category][this.route].SegmentName;
+            this.goaltime = this.records[this.category].Goal;
+            this.nowsegment = this.segmentCount;
+
             this.mypb = this.records[this.category][this.route].RouteBest;
             this.mysb = this.records[this.category][this.route].SegmentBests;
-            this.myssb = Utility.CumSum(this.mysb);
-            this.balanced = new TimeSpan?[this.records[this.category][this.route].SegmentCount];
+            this.myssb = CumSum(this.mysb);
+            this.balanced = new TimeSpan?[this.segmentCount];
             if (this.mypb.Last() - this.myssb.Last() is TimeSpan bal)
             {
                 AverageTargetSet(this.myssb, this.balanced, bal);
             }
-            this.goal = new TimeSpan?[this.records[this.category][this.route].SegmentCount];
+            this.goal = new TimeSpan?[this.segmentCount];
             if (this.goaltime - this.myssb.Last() is TimeSpan gl)
             {
                 AverageTargetSet(this.myssb, this.goal, gl);
             }
-            this.personalBest.Text = Utility.StrictSpanToString(this.mypb.Last());
-            this.sumOfBestSegments.Text = Utility.StrictSpanToString(this.myssb.Last());
         }
 
+        /// <summary>
+        /// 下三行を更新する
+        /// </summary>
+        private void UpdatePB()
+        {
+            this.personalBest.Text = StrictSpanToString(this.mypb.Last());
+            this.sumOfBestSegments.Text = StrictSpanToString(this.myssb.Last());
+            this.bestPossibleTime.Text = StrictSpanToString(this.myssb.Last());
+        }
+
+        /// <summary>
+        /// ターゲットの4行を更新する
+        /// </summary>
         private void TargetSet()
         {
-            this.currentSegmentLabel.Text = this.records[this.category][this.route].SegmentName[0];
+            this.currentSegmentLabel.Text = this.segmentNames[0];
             this.previousSegmentLabel.Text = "";
-            var pb = this.records[this.category].PersonalBest;
-            this.running = new TimeSpan?[this.mysb.Length];
             foreach (var i in Utility.Range(0, 4))
             {
                 switch (this.targettypes[i])
@@ -250,36 +292,15 @@ namespace Timer
                 }
                 this.targetLabels[i].TimeSet(0, this.running);
             }
-            this.bestPossibleTime.Text = Utility.StrictSpanToString(this.myssb.Last());
         }
 
         private static void AverageTargetSet(TimeSpan?[] ssb, TimeSpan?[] ret, TimeSpan span)
         {
-            foreach (var j in Utility.Range(0, ssb.Length))
+            foreach (var j in Range(0, ssb.Length))
             {
                 ret[j] = ssb[j] + new TimeSpan(0, 0, 0, 0, ((int)span.TotalMilliseconds) * (j + 1) / ssb.Length);
             }
         }
-
-        Stopwatch stopwatch;
-        TimeSpan prev;
-        Label[] targetNames;
-        Label[] targetCurrent;
-        Label[] targetPrevious;
-        TargetLabels[] targetLabels;
-        TargetType[] targettypes;
-        GameRecord records;
-        TimeSpan?[] running;
-        int category;
-        int route;
-        TimeSpan?[] mypb;
-        TimeSpan?[] mysb;
-        TimeSpan?[] myssb;
-        TimeSpan?[] balanced;
-        TimeSpan?[] goal;
-        TimeSpan? goaltime;
-        int nowsegment;
-        DateTime start;
 
         private GameRecord LoadFile(string path)
         {
@@ -293,13 +314,31 @@ namespace Timer
             }
             catch(InvalidCastException)
             {
-                MessageBox.Show("対応していないファイル形式です", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("対応していないファイル形式です。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch(System.IO.FileNotFoundException exp)
             {
                 MessageBox.Show(exp.Message, "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             return new GameRecord("default");
+        }
+
+        private bool SaveFile(string path)
+        {
+            try
+            {
+                using(var stream = new System.IO.FileStream(path, System.IO.FileMode.Create, System.IO.FileAccess.Write))
+                {
+                    var formatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+                    formatter.Serialize(stream, this.records);
+                    return true;
+                }
+            }
+            catch(UnauthorizedAccessException)
+            {
+                MessageBox.Show("ファイルの書き込みを拒否されました。", "エラー", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            return false;
         }
 
         private void FormKeyDown(object sender, KeyEventArgs e)
@@ -309,65 +348,104 @@ namespace Timer
                 case Keys.Enter:
                     KeyEnterDown();
                     break;
+                case Keys.Space:
+                    KeySpaceDown();
+                    break;
             }
         }
 
-        private void KeyEnterDown()
+        private void KeySpaceDown()
         {
-            if (this.stopwatch.IsRunning)
+            if (this.nowsegment != this.segmentCount)
             {
-                this.running[this.nowsegment] = this.stopwatch.Elapsed;
-                ++this.nowsegment;
-                if (this.nowsegment == this.running.Length)
-                {
-                    this.stopwatch.Stop();
-                    this.records[this.category][this.route].AddRecord(this.running, this.start);
-                    UpdatePB();
-                    this.bestPossibleTime.Text = "-:--:--.---";
-                }
-                else
-                {
-                    this.currentSegmentLabel.Text = this.records[this.category][this.route].SegmentName[this.nowsegment];
-                    this.previousSegmentLabel.Text = this.records[this.category][this.route].SegmentName[this.nowsegment - 1];
-                    this.bestPossibleTime.Text = Utility.StrictSpanToString(this.running[this.nowsegment - 1] - this.myssb[this.nowsegment - 1] + this.myssb.Last());
-                    this.previousTotal.Text = Utility.SpanToString(this.running[this.nowsegment - 1]);
-                    if (this.nowsegment >= 2)
-                    {
-                        this.previousSegment.Text = Utility.SpanToString(this.running[this.nowsegment - 1] - this.running[this.nowsegment - 2]);
-                    }
-                    else
-                    {
-                        this.previousSegment.Text = Utility.SpanToString(this.running[this.nowsegment - 1]);
-                    }
-                }
-                foreach(var i in Utility.Range(0, 4))
-                {
-                    this.targetLabels[i].TimeSet(this.nowsegment, this.running);
-                }
+                Split(null);
+            }
+        }
+
+        /// <summary>
+        /// スプリット処理
+        /// </summary>
+        /// <param name="time">通過タイム(nullならスキップ)</param>
+        private void Split(TimeSpan? time)
+        {
+            this.running[this.nowsegment] = time;
+            ++this.nowsegment;
+            this.previousSegmentLabel.Text = this.segmentNames[this.nowsegment - 1];
+            this.previousTotal.Text = SpanToString(this.running[this.nowsegment - 1]);
+            if (this.nowsegment >= 2)
+            {
+                this.previousSegment.Text = SpanToString(this.running[this.nowsegment - 1] - this.running[this.nowsegment - 2]);
             }
             else
             {
-                this.running = new TimeSpan?[this.running.Length];
-                this.nowsegment = 0;
-                TargetSet();
-                this.start = DateTime.Now;
+                this.previousSegment.Text = SpanToString(this.running[this.nowsegment - 1]);
+            }
+            if (this.nowsegment == this.segmentCount)
+            {
+                this.bestPossibleTime.Text = "-:--:--.---";
+            }
+            else
+            {
+                this.currentSegmentLabel.Text = this.segmentNames[this.nowsegment];
+                this.segprev = TimeSpan.Zero;
+                this.segmentTimer.Text = time is null ? "-:--:--" : "0:00:00";
+                this.bestPossibleTime.Text = StrictSpanToString(this.running[this.nowsegment - 1] - this.myssb[this.nowsegment - 1] + this.myssb.Last());
+            }
+            foreach (var t in this.targetLabels)
+            {
+                t.TimeSet(this.nowsegment, this.running);
+            }
+        }
+
+        /// <summary>
+        /// タイマースタート、スプリット、タイマーストップを行う
+        /// </summary>
+        private void KeyEnterDown()
+        {
+            if (this.nowsegment != this.segmentCount)
+            {
+                Split(this.stopwatch.Elapsed);
+            }
+            else
+            {
                 this.stopwatch.Restart();
+                this.start = DateTime.Now;
+                if(this.running is TimeSpan?[] run)
+                {
+                    this.records[this.category][this.route].AddRecord(run, this.start);
+                }
+                this.running = new TimeSpan?[this.segmentCount];
+                this.nowsegment = 0;
+                UpdatePB();
+                TargetSet();
             }
         }
 
         private void TimerTick(object sender, EventArgs e)
         {
-            if (this.stopwatch.IsRunning && this.prev.Milliseconds / 100 != this.stopwatch.Elapsed.Milliseconds / 100)
+            if (this.nowsegment != this.segmentCount)
             {
-                this.prev = this.stopwatch.Elapsed;
-                this.mainTimer.Text = Utility.SpanToString(this.prev);
+                var el = this.stopwatch.Elapsed;
+                if (this.prev.Milliseconds / 100 != el.Milliseconds / 100)
+                {
+                    this.prev = el;
+                    this.mainTimer.Text = SpanToString(this.prev);
+                }
                 if (this.nowsegment == 0)
                 {
-                    this.segmentTimer.Text = this.mainTimer.Text;
+                    this.segmentTimer.Text = ShortSpanToString(this.prev);
+                }
+                else if(this.running[this.nowsegment-1] is TimeSpan pv)
+                {
+                    if (this.segprev.Seconds != (el - pv).Seconds) 
+                    {
+                        this.segprev = el - pv;
+                        this.segmentTimer.Text = ShortSpanToString(this.segprev);
+                    }
                 }
                 else
                 {
-                    this.segmentTimer.Text = Utility.SpanToString(this.prev - this.running[this.nowsegment - 1]);
+                    this.segmentTimer.Text = "-:--:--";
                 }
             }
         }
