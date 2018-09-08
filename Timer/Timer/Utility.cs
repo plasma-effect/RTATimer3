@@ -80,5 +80,26 @@ namespace Timer
             }
             return ret;
         }
+
+        public static bool IsAnyOfParams<T>(T val, params T[] ts)
+        {
+            foreach(var t in ts)
+            {
+                if (val.Equals(t))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static IEnumerable<(T value, int index)> Indexed<T>(this IEnumerable<T> rng)
+        {
+            var index = -1;
+            foreach(var v in rng)
+            {
+                yield return (v, ++index);
+            }
+        }
     }
 }

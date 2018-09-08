@@ -1,6 +1,6 @@
 ﻿namespace Timer
 {
-    partial class Form1
+    partial class TimerForm
     {
         /// <summary>
         /// 必要なデザイナー変数です。
@@ -56,6 +56,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.ファイルToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.自己記録編集ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.ターゲット確認ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -322,17 +324,34 @@
             this.ファイルToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 40);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 42);
             this.menuStrip1.TabIndex = 27;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // ファイルToolStripMenuItem
             // 
+            this.ファイルToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.自己記録編集ToolStripMenuItem,
+            this.ターゲット確認ToolStripMenuItem});
             this.ファイルToolStripMenuItem.Name = "ファイルToolStripMenuItem";
-            this.ファイルToolStripMenuItem.Size = new System.Drawing.Size(95, 36);
+            this.ファイルToolStripMenuItem.Size = new System.Drawing.Size(95, 38);
             this.ファイルToolStripMenuItem.Text = "ファイル";
             // 
-            // Form1
+            // 自己記録編集ToolStripMenuItem
+            // 
+            this.自己記録編集ToolStripMenuItem.Name = "自己記録編集ToolStripMenuItem";
+            this.自己記録編集ToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.自己記録編集ToolStripMenuItem.Text = "自己記録編集";
+            this.自己記録編集ToolStripMenuItem.Click += new System.EventHandler(this.EditRecordToolStripMenuItemClick);
+            // 
+            // ターゲット確認ToolStripMenuItem
+            // 
+            this.ターゲット確認ToolStripMenuItem.Name = "ターゲット確認ToolStripMenuItem";
+            this.ターゲット確認ToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.ターゲット確認ToolStripMenuItem.Text = "ターゲット確認";
+            this.ターゲット確認ToolStripMenuItem.Click += new System.EventHandler(this.TargetCheckToolStripMenuItemClick);
+            // 
+            // TimerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(13F, 24F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -363,7 +382,7 @@
             this.Controls.Add(this.mainTimer);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "Form1";
+            this.Name = "TimerForm";
             this.Text = "Form1";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormKeyDown);
             this.menuStrip1.ResumeLayout(false);
@@ -402,6 +421,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem ファイルToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 自己記録編集ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem ターゲット確認ToolStripMenuItem;
     }
 }
 

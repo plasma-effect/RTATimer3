@@ -12,7 +12,7 @@ namespace Timer
     /// </summary>
     [Serializable]public class RecordElement
     {
-        public TimeSpan?[] Records { get; }
+        public TimeSpan?[] Records { get; set; }
         public DateTime PlayDateTime { get; }
 
         /// <summary>
@@ -37,6 +37,15 @@ namespace Timer
             {
                 return this.Records[index];
             }
+            set
+            {
+                this.Records[index] = value;
+            }
+        }
+
+        public void RestoreTimes(TimeSpan?[] records)
+        {
+            this.Records = records;
         }
     }
 
@@ -88,16 +97,16 @@ namespace Timer
             {
                 var len = this.SegmentName.Length;
                 var ret = new TimeSpan?[len];
-                foreach(var rec in this.Records)
+                foreach (var rec in this.Records)
                 {
                     if (ret.Last() is TimeSpan sp)
                     {
-                        if (sp > rec[len - 1]) 
+                        if (sp > rec[len - 1])
                         {
                             ret = rec.Records;
                         }
                     }
-                    else if (rec[len] is TimeSpan)
+                    else if (rec[len - 1] is TimeSpan)
                     {
                         ret = rec.Records;
                     }
@@ -120,6 +129,45 @@ namespace Timer
                     }
                 }
                 return ret;
+            }
+        }
+
+        /// <summary>
+        /// 記録の数
+        /// </summary>
+        public int RecordCount
+        {
+            get
+            {
+                return this.Records.Count;
+            }
+        }
+
+        /// <summary>
+        /// 区間の数
+        /// </summary>
+        public int SegmentCount
+        {
+            get
+            {
+                return this.SegmentName.Length;
+            }
+        }
+
+        /// <summary>
+        /// 個別の記録
+        /// </summary>
+        /// <param name="index">番号</param>
+        /// <returns>index番目の記録を返す</returns>
+        public RecordElement this[int index]
+        {
+            get
+            {
+                return this.Records[index];
+            }
+            set
+            {
+                this.Records[index] = value;
             }
         }
     }
@@ -162,6 +210,10 @@ namespace Timer
             get
             {
                 return this.MyRecords[index];
+            }
+            set
+            {
+                this.MyRecords[index] = value;
             }
         }
 
@@ -220,9 +272,11 @@ namespace Timer
             foreach(var i in Utility.Range(0, size))
             {
                 var rec = new TimeSpan?[segnames.Length];
+                var prev = 0;
                 foreach(var k in Utility.Range(0, segnames.Length))
                 {
-                    rec[k] = new TimeSpan(0, 0, 0, 0, random.Next(1, maxspan / minspan + 1) * minspan);
+                    prev += random.Next(1, maxspan / minspan + 1) * minspan;
+                    rec[k] = new TimeSpan(0, 0, 0, 0, prev);
                 }
                 ret[0][1].AddRecord(rec, DateTime.Now);
             }

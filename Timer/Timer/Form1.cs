@@ -12,7 +12,7 @@ using System.Runtime.Serialization;
 
 namespace Timer
 {
-    public partial class Form1 : Form
+    public partial class TimerForm : Form
     {
         class TargetLabels
         {
@@ -117,7 +117,7 @@ namespace Timer
             PersonalBest,
             SegmentBest,
             SumOfBestSegments,
-            BestPossibleTime,
+            PossibleTimeSave,
             BalancedPB,
             BalancedGoal
         }
@@ -128,7 +128,7 @@ namespace Timer
             return new TargetLabels(rec, this.targetCurrent[index], this.targetPrevious[index], timeSpanFlag, prevColorFlag);
         }
 
-        public Form1()
+        public TimerForm()
         {
             InitializeComponent();
             this.stopwatch = new Stopwatch();
@@ -175,6 +175,16 @@ namespace Timer
             this.mypb = this.records[this.category][this.route].RouteBest;
             this.mysb = this.records[this.category][this.route].SegmentBests;
             this.myssb = Utility.CumSum(this.mysb);
+            this.balanced = new TimeSpan?[this.records[this.category][this.route].SegmentCount];
+            if (this.mypb.Last() - this.myssb.Last() is TimeSpan bal)
+            {
+                AverageTargetSet(this.myssb, this.balanced, bal);
+            }
+            this.goal = new TimeSpan?[this.records[this.category][this.route].SegmentCount];
+            if (this.goaltime - this.myssb.Last() is TimeSpan gl)
+            {
+                AverageTargetSet(this.myssb, this.goal, gl);
+            }
             this.personalBest.Text = Utility.StrictSpanToString(this.mypb.Last());
             this.sumOfBestSegments.Text = Utility.StrictSpanToString(this.myssb.Last());
         }
@@ -210,7 +220,7 @@ namespace Timer
                                 TargetLabels.PrevColorFlag.None);
                         }
                         break;
-                    case TargetType.BestPossibleTime:
+                    case TargetType.PossibleTimeSave:
                         {
                             var ret = new TimeSpan?[this.mysb.Length];
                             ret[0] = this.mypb[0] - this.mysb[0];
@@ -218,31 +228,21 @@ namespace Timer
                             {
                                 ret[j] = (this.mypb[j] - this.mypb[j - 1]) - this.mysb[j];
                             }
-                            this.targetLabels[i] = MakeTargetLabels(i, "Best Possible Time", ret,
+                            this.targetLabels[i] = MakeTargetLabels(i, "Possible Time Save", ret,
                                 TargetLabels.TimeSpanFlag.None,
                                 TargetLabels.PrevColorFlag.None);
                         }
                         break;
                     case TargetType.BalancedPB:
                         {
-                            var ret = new TimeSpan?[this.mysb.Length];
-                            if (pb - this.myssb.Last() is TimeSpan span)
-                            {
-                                AverageTargetSet(this.myssb, ret, span);
-                            }
-                            this.targetLabels[i] = MakeTargetLabels(i, "Balanced", ret,
+                            this.targetLabels[i] = MakeTargetLabels(i, "Balanced", this.balanced,
                                 TargetLabels.TimeSpanFlag.Total,
                                 TargetLabels.PrevColorFlag.None);
                         }
                         break;
                     case TargetType.BalancedGoal:
                         {
-                            var ret = new TimeSpan?[this.myssb.Length];
-                            if (this.records[this.category].Goal - this.myssb.Last() is TimeSpan span)
-                            {
-                                AverageTargetSet(this.myssb, ret, span);
-                            }
-                            this.targetLabels[i] = MakeTargetLabels(i, "Goal", ret,
+                            this.targetLabels[i] = MakeTargetLabels(i, "Goal", this.goal,
                                 TargetLabels.TimeSpanFlag.Total,
                                 TargetLabels.PrevColorFlag.None);
                         }
@@ -275,6 +275,9 @@ namespace Timer
         TimeSpan?[] mypb;
         TimeSpan?[] mysb;
         TimeSpan?[] myssb;
+        TimeSpan?[] balanced;
+        TimeSpan?[] goal;
+        TimeSpan? goaltime;
         int nowsegment;
         DateTime start;
 
@@ -357,7 +360,7 @@ namespace Timer
             if (this.stopwatch.IsRunning && this.prev.Milliseconds / 100 != this.stopwatch.Elapsed.Milliseconds / 100)
             {
                 this.prev = this.stopwatch.Elapsed;
-                this.mainTimer.Text = this.prev.ToString(@"h\:mm\:ss\.f");
+                this.mainTimer.Text = Utility.SpanToString(this.prev);
                 if (this.nowsegment == 0)
                 {
                     this.segmentTimer.Text = this.mainTimer.Text;
@@ -367,6 +370,29 @@ namespace Timer
                     this.segmentTimer.Text = Utility.SpanToString(this.prev - this.running[this.nowsegment - 1]);
                 }
             }
+        }
+
+        private void EditRecordToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var form = new RecordEditor
+            {
+                Record = this.records[this.category][this.route]
+            };
+            form.ShowDialog(this);
+            this.records[this.category][this.route] = form.Record;
+            TargetSet();
+        }
+
+        private void TargetCheckToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            var form = new TargetCheck();
+            form.SetName(this.records[this.category][this.route].SegmentName);
+            form.SetTime(0, this.mypb);
+            form.SetTime(1, this.mysb);
+            form.SetTime(2, this.myssb);
+            form.SetTime(3, this.balanced);
+            form.SetTime(4, this.goal);
+            form.ShowDialog(this);
         }
     }
 }
