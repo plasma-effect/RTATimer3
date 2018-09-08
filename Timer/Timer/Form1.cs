@@ -163,7 +163,7 @@ namespace Timer
                 (TargetType)Properties.Settings.Default.Target3
             };
             this.targetLabels = new TargetLabels[4];
-            this.records = GameRecord.MakeTestData();//LoadFile(Properties.Settings.Default.DefaultPath);
+            this.records = RecordTest.MakeTestData("test", 3, 500, 3000, "First", "Second", "Last");//LoadFile(Properties.Settings.Default.DefaultPath);
             this.category = 0;//Math.Max(0, Math.Min(this.records.CategoryRecords.Count - 1, Properties.Settings.Default.DefaultCategory));
             this.route = 1;// Math.Max(0, Math.Min(this.records[this.category].MyRecords.Count - 1, Properties.Settings.Default.DefaultRoute));
             UpdatePB();
@@ -276,6 +276,7 @@ namespace Timer
         TimeSpan?[] mysb;
         TimeSpan?[] myssb;
         int nowsegment;
+        DateTime start;
 
         private GameRecord LoadFile(string path)
         {
@@ -317,7 +318,7 @@ namespace Timer
                 if (this.nowsegment == this.running.Length)
                 {
                     this.stopwatch.Stop();
-                    this.records[this.category][this.route].AddRecord(this.running);
+                    this.records[this.category][this.route].AddRecord(this.running, this.start);
                     UpdatePB();
                     this.bestPossibleTime.Text = "-:--:--.---";
                 }
@@ -346,6 +347,7 @@ namespace Timer
                 this.running = new TimeSpan?[this.running.Length];
                 this.nowsegment = 0;
                 TargetSet();
+                this.start = DateTime.Now;
                 this.stopwatch.Restart();
             }
         }

@@ -7,54 +7,99 @@ using System.Diagnostics;
 
 namespace Timer
 {
-    [Serializable]class RouteRecord
+    /// <summary>
+    /// 個別の記録のクラス
+    /// </summary>
+    [Serializable]public class RecordElement
+    {
+        public TimeSpan?[] Records { get; }
+        public DateTime PlayDateTime { get; }
+
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="records">各区間の通過タイム</param>
+        /// <param name="playDateTime">開始時間</param>
+        public RecordElement(TimeSpan?[] records, DateTime playDateTime)
+        {
+            this.Records = records;
+            this.PlayDateTime = playDateTime;
+        }
+        
+        /// <summary>
+        /// 区間の通過タイムを取る
+        /// </summary>
+        /// <param name="index">取りたい区間の番号</param>
+        /// <returns>タイム(nullならスキップ)</returns>
+        public TimeSpan? this[int index]
+        {
+            get
+            {
+                return this.Records[index];
+            }
+        }
+    }
+
+    /// <summary>
+    /// 一つのルートの各区間の名前とそのルートの記録のクラス
+    /// </summary>
+    [Serializable]public class RouteRecord
     {
         public string RouteName { get; }
         public string[] SegmentName { get; }
-        public List<TimeSpan?[]> Records { get; }
+        public List<RecordElement> Records { get; }
 
+        /// <summary>
+        /// コンストラクタ
+        /// </summary>
+        /// <param name="routename">ルートの名前</param>
+        /// <param name="segname">各区間の名前</param>
         public RouteRecord(string routename, string[] segname)
         {
             this.RouteName = routename;
             this.SegmentName = segname;
-            this.Records = new List<TimeSpan?[]>();
+            this.Records = new List<RecordElement>();
         }
-
-        public void AddRecord(TimeSpan?[] record)
+        
+        /// <summary>
+        /// 記録を追加する
+        /// </summary>
+        /// <param name="record">各区間の通過タイム</param>
+        /// <param name="datetime">開始時間</param>
+        /// <returns>追加した記録のindex</returns>
+        public int AddRecord(TimeSpan?[] record, DateTime datetime)
         {
             var rec = record;
-            if (record.Length < this.SegmentName.Length)
+            if (record.Length != this.SegmentName.Length)
             {
                 rec = new TimeSpan?[this.SegmentName.Length];
-                foreach(var i in Utility.Range(0, record.Length))
+                foreach(var i in Utility.Range(0, Math.Min(record.Length,this.SegmentName.Length)))
                 {
                     rec[i] = record[i];
                 }
             }
-            else if (record.Length > this.SegmentName.Length)
-            {
-                rec = record.Take(this.SegmentName.Length).ToArray();
-            }
-            this.Records.Add(rec);
+            this.Records.Add(new RecordElement(record, datetime));
+            return this.Records.Count - 1;
         }
-
+        
         public TimeSpan?[] RouteBest
         {
             get
             {
-                var ret = new TimeSpan?[this.SegmentName.Length];
+                var len = this.SegmentName.Length;
+                var ret = new TimeSpan?[len];
                 foreach(var rec in this.Records)
                 {
                     if (ret.Last() is TimeSpan sp)
                     {
-                        if (sp > rec.Last())
+                        if (sp > rec[len - 1]) 
                         {
-                            ret = rec;
+                            ret = rec.Records;
                         }
                     }
-                    else if (rec.Last() is TimeSpan)
+                    else if (rec[len] is TimeSpan)
                     {
-                        ret = rec;
+                        ret = rec.Records;
                     }
                 }
                 return ret;
@@ -79,12 +124,19 @@ namespace Timer
         }
     }
 
-    [Serializable]class CategoryRecord
+    /// <summary>
+    /// カテゴリの名前とそのカテゴリの記録のクラス
+    /// </summary>
+    [Serializable]public class CategoryRecord
     {
         public string CategoryName { get; }
         public List<RouteRecord> MyRecords { get; }
         public TimeSpan? Goal { set; get; }
 
+        /// <summary>
+        /// カテゴリ名
+        /// </summary>
+        /// <param name="name"></param>
         public CategoryRecord(string name)
         {
             this.CategoryName = name;
@@ -96,10 +148,15 @@ namespace Timer
         {
             get
             {
-                return this.MyRecords.Select(r => r.RouteBest.Last()).Min();
+                return this.MyRecords.Select(r => r.RouteBest?.Last()).Min();
             }
         }
 
+        /// <summary>
+        /// index番目のRouteRecordを返す
+        /// </summary>
+        /// <param name="index">番号</param>
+        /// <returns>index番目のRoute</returns>
         public RouteRecord this[int index]
         {
             get
@@ -107,9 +164,18 @@ namespace Timer
                 return this.MyRecords[index];
             }
         }
+
+        public int AddRoute(RouteRecord route)
+        {
+            this.MyRecords.Add(route);
+            return this.MyRecords.Count - 1;
+        }
     }
 
-    [Serializable]class GameRecord
+    /// <summary>
+    /// ゲーム名とそのゲームに関する記録のクラス
+    /// </summary>
+    [Serializable]public class GameRecord
     {
         public string GameName { get; }
         public List<CategoryRecord> CategoryRecords { get; }
@@ -124,6 +190,11 @@ namespace Timer
             this.CategoryRecords.Last().MyRecords.Add(new RouteRecord("default", new string[] { "Clear" }));
         }
 
+        /// <summary>
+        /// index番目のカテゴリを返す
+        /// </summary>
+        /// <param name="index">番号</param>
+        /// <returns>カテゴリ</returns>
         public CategoryRecord this[int index]
         {
             get
@@ -132,24 +203,30 @@ namespace Timer
             }
         }
 
-        public static GameRecord MakeTestData()
+        public int AddCategory(CategoryRecord category)
         {
-            var data = new GameRecord("test");
-            data[0].MyRecords.Add(new RouteRecord("test route", new string[] { "First", "Second", "Last" }));
-            data[0][1].AddRecord(new TimeSpan?[]
+            this.CategoryRecords.Add(category);
+            return this.CategoryRecords.Count - 1;
+        }
+    }
+    
+    public class RecordTest
+    {   
+        public static GameRecord MakeTestData(string gamename, int size, int minspan,int maxspan, params string[] segnames)
+        {
+            var random = new Random();
+            var ret = new GameRecord(gamename);
+            ret[0].AddRoute(new RouteRecord("test", segnames));
+            foreach(var i in Utility.Range(0, size))
             {
-                new TimeSpan(0,0,0,1,0),
-                new TimeSpan(0,0,0,2,500),
-                new TimeSpan(0,0,0,5,000)
-            });
-            data[0][1].AddRecord(new TimeSpan?[]
-            {
-                new TimeSpan(0,0,0,2,000),
-                new TimeSpan(0,0,0,3,500),
-                new TimeSpan(0,0,0,4,500)
-            });
-            data[0].Goal = new TimeSpan(0, 0, 0, 4, 0);
-            return data;
+                var rec = new TimeSpan?[segnames.Length];
+                foreach(var k in Utility.Range(0, segnames.Length))
+                {
+                    rec[k] = new TimeSpan(0, 0, 0, 0, random.Next(1, maxspan / minspan + 1) * minspan);
+                }
+                ret[0][1].AddRecord(rec, DateTime.Now);
+            }
+            return ret;
         }
     }
 }
