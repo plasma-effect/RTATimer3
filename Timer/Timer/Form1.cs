@@ -390,6 +390,15 @@ namespace Timer
                 case Keys.Escape:
                     KeyEscapeDown();
                     break;
+                case Keys.P:
+                    var image = new Bitmap(this.Width - 22, this.Height - 11);
+                    using (var g = Graphics.FromImage(image))
+                    {
+                        g.CopyFromScreen(new Point(this.Left + 11, this.Top), new Point(0, 0), image.Size);
+                        var now = DateTime.Now;
+                        image.Save($"snapshot{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00}.png", System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                    break;
             }
         }
 
