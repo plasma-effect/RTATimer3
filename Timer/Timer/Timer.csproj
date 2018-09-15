@@ -58,6 +58,30 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="GoalChange.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="GoalChange.Designer.cs">
+      <DependentUpon>GoalChange.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MakeNewCategory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MakeNewCategory.Designer.cs">
+      <DependentUpon>MakeNewCategory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MakeNewRoute.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MakeNewRoute.Designer.cs">
+      <DependentUpon>MakeNewRoute.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MakeNewRouteFromText.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MakeNewRouteFromText.Designer.cs">
+      <DependentUpon>MakeNewRouteFromText.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RecordData.cs" />
@@ -76,6 +100,18 @@
     <Compile Include="Utility.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GoalChange.resx">
+      <DependentUpon>GoalChange.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MakeNewCategory.resx">
+      <DependentUpon>MakeNewCategory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MakeNewRoute.resx">
+      <DependentUpon>MakeNewRoute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MakeNewRouteFromText.resx">
+      <DependentUpon>MakeNewRouteFromText.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

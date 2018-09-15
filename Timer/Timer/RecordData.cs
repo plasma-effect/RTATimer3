@@ -217,6 +217,11 @@ namespace Timer
             }
         }
 
+        /// <summary>
+        /// ルート追加
+        /// </summary>
+        /// <param name="route">追加するルート</param>
+        /// <returns>追加したルートのindex</returns>
         public int AddRoute(RouteRecord route)
         {
             this.MyRecords.Add(route);

@@ -56,13 +56,18 @@
             this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.ファイルToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.自己記録編集ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ターゲット確認ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.新ルート作成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.新カテゴリ追加ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.目標タイム変更ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.現在のルートを起動時に読み込むToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.終了ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -330,71 +335,110 @@
             this.ファイルToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 40);
+            this.menuStrip1.Size = new System.Drawing.Size(800, 42);
             this.menuStrip1.TabIndex = 27;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // ファイルToolStripMenuItem
             // 
             this.ファイルToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItem2,
+            this.toolStripMenuItem1,
+            this.toolStripSeparator3,
             this.自己記録編集ToolStripMenuItem,
             this.ターゲット確認ToolStripMenuItem,
             this.toolStripSeparator1,
             this.新ルート作成ToolStripMenuItem,
+            this.toolStripMenuItem3,
             this.新カテゴリ追加ToolStripMenuItem,
             this.目標タイム変更ToolStripMenuItem,
             this.toolStripSeparator2,
+            this.現在のルートを起動時に読み込むToolStripMenuItem,
             this.終了ToolStripMenuItem});
             this.ファイルToolStripMenuItem.Name = "ファイルToolStripMenuItem";
-            this.ファイルToolStripMenuItem.Size = new System.Drawing.Size(95, 36);
+            this.ファイルToolStripMenuItem.Size = new System.Drawing.Size(95, 38);
             this.ファイルToolStripMenuItem.Text = "ファイル";
+            // 
+            // toolStripMenuItem2
+            // 
+            this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+            this.toolStripMenuItem2.Size = new System.Drawing.Size(432, 38);
+            this.toolStripMenuItem2.Text = "新規作成";
+            // 
+            // toolStripMenuItem1
+            // 
+            this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+            this.toolStripMenuItem1.Size = new System.Drawing.Size(432, 38);
+            this.toolStripMenuItem1.Text = "ファイル読み込み";
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(429, 6);
             // 
             // 自己記録編集ToolStripMenuItem
             // 
             this.自己記録編集ToolStripMenuItem.Name = "自己記録編集ToolStripMenuItem";
-            this.自己記録編集ToolStripMenuItem.Size = new System.Drawing.Size(264, 38);
+            this.自己記録編集ToolStripMenuItem.Size = new System.Drawing.Size(432, 38);
             this.自己記録編集ToolStripMenuItem.Text = "自己記録編集";
             this.自己記録編集ToolStripMenuItem.Click += new System.EventHandler(this.EditRecordToolStripMenuItemClick);
             // 
             // ターゲット確認ToolStripMenuItem
             // 
             this.ターゲット確認ToolStripMenuItem.Name = "ターゲット確認ToolStripMenuItem";
-            this.ターゲット確認ToolStripMenuItem.Size = new System.Drawing.Size(264, 38);
-            this.ターゲット確認ToolStripMenuItem.Text = "ターゲット確認";
+            this.ターゲット確認ToolStripMenuItem.Size = new System.Drawing.Size(432, 38);
+            this.ターゲット確認ToolStripMenuItem.Text = "ターゲット変更";
             this.ターゲット確認ToolStripMenuItem.Click += new System.EventHandler(this.TargetCheckToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(429, 6);
             // 
             // 新ルート作成ToolStripMenuItem
             // 
             this.新ルート作成ToolStripMenuItem.Name = "新ルート作成ToolStripMenuItem";
-            this.新ルート作成ToolStripMenuItem.Size = new System.Drawing.Size(264, 38);
+            this.新ルート作成ToolStripMenuItem.Size = new System.Drawing.Size(432, 38);
             this.新ルート作成ToolStripMenuItem.Text = "新ルート作成";
+            this.新ルート作成ToolStripMenuItem.Click += new System.EventHandler(this.MakeNewRouteToolStripMenuItemClick);
+            // 
+            // toolStripMenuItem3
+            // 
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(432, 38);
+            this.toolStripMenuItem3.Text = "テキストファイルからルート追加";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.NewRouteFromTextClick);
             // 
             // 新カテゴリ追加ToolStripMenuItem
             // 
             this.新カテゴリ追加ToolStripMenuItem.Name = "新カテゴリ追加ToolStripMenuItem";
-            this.新カテゴリ追加ToolStripMenuItem.Size = new System.Drawing.Size(264, 38);
+            this.新カテゴリ追加ToolStripMenuItem.Size = new System.Drawing.Size(432, 38);
             this.新カテゴリ追加ToolStripMenuItem.Text = "新カテゴリ追加";
+            this.新カテゴリ追加ToolStripMenuItem.Click += new System.EventHandler(this.MakeNewCategoryToolStripMenuItemClick);
             // 
             // 目標タイム変更ToolStripMenuItem
             // 
             this.目標タイム変更ToolStripMenuItem.Name = "目標タイム変更ToolStripMenuItem";
-            this.目標タイム変更ToolStripMenuItem.Size = new System.Drawing.Size(264, 38);
+            this.目標タイム変更ToolStripMenuItem.Size = new System.Drawing.Size(432, 38);
             this.目標タイム変更ToolStripMenuItem.Text = "目標タイム変更";
+            this.目標タイム変更ToolStripMenuItem.Click += new System.EventHandler(this.ChangeGoalTimeClick);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(261, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(429, 6);
+            // 
+            // 現在のルートを起動時に読み込むToolStripMenuItem
+            // 
+            this.現在のルートを起動時に読み込むToolStripMenuItem.Name = "現在のルートを起動時に読み込むToolStripMenuItem";
+            this.現在のルートを起動時に読み込むToolStripMenuItem.Size = new System.Drawing.Size(432, 38);
+            this.現在のルートを起動時に読み込むToolStripMenuItem.Text = "現在のルートを起動時に読み込む";
+            this.現在のルートを起動時に読み込むToolStripMenuItem.Click += new System.EventHandler(this.DefaultSetToolStripMenuItemClick);
             // 
             // 終了ToolStripMenuItem
             // 
             this.終了ToolStripMenuItem.Name = "終了ToolStripMenuItem";
-            this.終了ToolStripMenuItem.Size = new System.Drawing.Size(264, 38);
+            this.終了ToolStripMenuItem.Size = new System.Drawing.Size(432, 38);
             this.終了ToolStripMenuItem.Text = "終了";
             // 
             // TimerForm
@@ -430,6 +474,7 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "TimerForm";
             this.Text = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TimerFormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormKeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -475,6 +520,11 @@
         private System.Windows.Forms.ToolStripMenuItem 目標タイム変更ToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripMenuItem 終了ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem 現在のルートを起動時に読み込むToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
     }
 }
 
