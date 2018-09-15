@@ -582,6 +582,7 @@ namespace Timer
         {
             AddRecord();
             SaveFile(this.path);
+            Properties.Settings.Default.Save();
         }
 
         /// <summary>
