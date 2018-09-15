@@ -147,6 +147,15 @@ namespace Timer
             BalancedGoal
         }
 
+        /// <summary>
+        /// TargetLabelsのファクトリー関数
+        /// </summary>
+        /// <param name="index">何番目か</param>
+        /// <param name="name">名前</param>
+        /// <param name="rec">記録</param>
+        /// <param name="timeSpanFlag">区間か累計か</param>
+        /// <param name="prevColorFlag">直前のタイムに対する色をどうするか</param>
+        /// <returns>TargetLabels</returns>
         private TargetLabels MakeTargetLabels(int index, string name, TimeSpan?[] rec, TargetLabels.TimeSpanFlag timeSpanFlag, TargetLabels.PrevColorFlag prevColorFlag)
         {
             this.targetNames[index].Text = name;
@@ -183,7 +192,7 @@ namespace Timer
             };
             
             this.targetLabels = new TargetLabels[4];
-            this.records = RecordTest.MakeTestData("test", 3, 500, 3000, "First", "Second", "Last");//LoadFile(this.path);
+            this.records = LoadFile(this.path);
             this.category = Clamp(Properties.Settings.Default.DefaultCategory, 0, this.records.CategoryCount - 1);
             this.route = Clamp(Properties.Settings.Default.DefaultRoute, 0, this.records[this.category].RouteCount - 1);
             ThreeUpdates();
@@ -297,6 +306,12 @@ namespace Timer
             }
         }
 
+        /// <summary>
+        /// ssbに対し最後がssb.Last()+spanになるように均等にプラスしたデータを作る
+        /// </summary>
+        /// <param name="ssb">区間ベストの和</param>
+        /// <param name="ret">返り値</param>
+        /// <param name="span">増やす分</param>
         private static void AverageTargetSet(TimeSpan?[] ssb, TimeSpan?[] ret, TimeSpan span)
         {
             foreach (var j in Range(0, ssb.Length))
@@ -305,6 +320,11 @@ namespace Timer
             }
         }
 
+        /// <summary>
+        /// ファイル読み込み
+        /// </summary>
+        /// <param name="path">パス</param>
+        /// <returns>データ</returns>
         private GameRecord LoadFile(string path)
         {
             try
@@ -326,6 +346,11 @@ namespace Timer
             return new GameRecord("default");
         }
 
+        /// <summary>
+        /// ファイル保存
+        /// </summary>
+        /// <param name="path">パス</param>
+        /// <returns>成功したかどうか</returns>
         private bool SaveFile(string path)
         {
             try
@@ -344,6 +369,11 @@ namespace Timer
             return false;
         }
 
+        /// <summary>
+        /// キーを押した時の処理
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void FormKeyDown(object sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
@@ -360,6 +390,9 @@ namespace Timer
             }
         }
 
+        /// <summary>
+        /// BackSpaceを押した時の処理
+        /// </summary>
         private void KeyBackDown()
         {
             if (this.nowsegment != 0)
@@ -370,6 +403,9 @@ namespace Timer
             }
         }
 
+        /// <summary>
+        /// Spaceを押した時の処理
+        /// </summary>
         private void KeySpaceDown()
         {
             if (this.nowsegment != this.segmentCount)
@@ -389,6 +425,10 @@ namespace Timer
             UpdateTimeLabels(time);
         }
 
+        /// <summary>
+        /// Splitした時の各種時間に関するラベル更新
+        /// </summary>
+        /// <param name="time"></param>
         private void UpdateTimeLabels(TimeSpan? time)
         {
             var runprev = this.nowsegment == 0 ? TimeSpan.Zero : this.running[this.nowsegment - 1];
@@ -511,12 +551,7 @@ namespace Timer
         /// <param name="e"></param>
         private void TargetCheckToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.stopwatch.Stop();
-            if (this.running is TimeSpan?[] run && !run.All(s => s is null))
-            {
-                this.records[this.category][this.route].AddRecord(run, this.start);
-                this.running = null;
-            }
+            AddRecord();
             var form = new TargetCheck();
             form.SetName(this.records[this.category][this.route].SegmentName);
             form.SetTime(0, this.mypb);
@@ -545,10 +580,7 @@ namespace Timer
         /// <param name="e"></param>
         private void TimerFormClosing(object sender, FormClosingEventArgs e)
         {
-            if (this.running is TimeSpan?[] run && !run.All(s => s is null))
-            {
-                this.records[this.category][this.route].AddRecord(run, this.start);
-            }
+            AddRecord();
             SaveFile(this.path);
         }
 
@@ -571,11 +603,7 @@ namespace Timer
         /// <param name="e"></param>
         private void MakeNewRouteToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (this.running is TimeSpan?[] run && !run.All(s => s is null))
-            {
-                this.records[this.category][this.route].AddRecord(run, this.start);
-                this.running = null;
-            }
+            AddRecord();
             var form = new MakeNewRoute();
             if (form.ShowDialog(this) == DialogResult.OK)
             {
@@ -601,11 +629,7 @@ namespace Timer
         /// <param name="e"></param>
         private void MakeNewCategoryToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (this.running is TimeSpan?[] run && !run.All(s => s is null))
-            {
-                this.records[this.category][this.route].AddRecord(run, this.start);
-                this.running = null;
-            }
+            AddRecord();
             var form = new MakeNewCategory();
             if (form.ShowDialog(this) == DialogResult.OK)
             {
@@ -619,8 +643,14 @@ namespace Timer
             ThreeUpdates();
         }
 
+        /// <summary>
+        /// テキストファイルから新ルート作成
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NewRouteFromTextClick(object sender, EventArgs e)
         {
+            AddRecord();
             var form = new MakeNewRouteFromText();
             if (form.ShowDialog(this) != DialogResult.OK)
             {
@@ -659,14 +689,113 @@ namespace Timer
             }
         }
 
+        /// <summary>
+        /// 目標タイム変更
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ChangeGoalTimeClick(object sender, EventArgs e)
         {
+            AddRecord();
             var form = new GoalChange();
             if (form.ShowDialog(this) == DialogResult.OK)
             {
                 this.records[this.category].Goal = form.NewGoal;
             }
             ThreeUpdates();
+        }
+
+        /// <summary>
+        /// カテゴリとルート変更
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void RouteChangeClick(object sender, EventArgs e)
+        {
+            AddRecord();
+            var routes = new List<List<string>>();
+            foreach(var cat in this.records.CategoryRecords)
+            {
+                routes.Add(cat.MyRecords.Select(r => r.RouteName).ToList());
+            }
+            var form = new CategoryRouteChange()
+            {
+                CategoryList = this.records.CategoryRecords.Select(rec => rec.CategoryName).ToList(),
+                RouteList = routes,
+                Category = this.category,
+                Route = this.route
+            };
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                this.category = form.Category;
+                this.route = form.Route;
+                ThreeUpdates();
+            }
+        }
+
+        /// <summary>
+        /// 記録追加処理
+        /// </summary>
+        private void AddRecord()
+        {
+            this.stopwatch.Stop();
+            if (this.running is TimeSpan?[] run && !run.All(s => s is null))
+            {
+                this.records[this.category][this.route].AddRecord(run, this.start);
+                this.running = null;
+            }
+        }
+
+        /// <summary>
+        /// ファイルを開く
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void LoadFileClick(object sender, EventArgs e)
+        {
+            AddRecord();
+            SaveFile(this.path);
+            var ofd = new OpenFileDialog
+            {
+                Filter = "bin file(*.bin)|*.bin|all file(*.*)|*.*"
+            };
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                this.path = ofd.FileName;
+                this.records = LoadFile(this.path);
+                this.category = 0;
+                this.route = 0;
+                ThreeUpdates();
+            }
+        }
+
+        private void CreateFileClick(object sender, EventArgs e)
+        {
+            AddRecord();
+            SaveFile(this.path);
+            var form = new CreateFile();
+            if (form.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+            var sfd = new SaveFileDialog()
+            {
+                Filter = "bin file(*.bin)|*.bin|all file(*.*)|*.*"
+            };
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                this.path = sfd.FileName;
+                this.records = new GameRecord(form.GameName);
+                this.category = 0;
+                this.route = 0;
+                SaveFile(this.path);
+                ThreeUpdates();
+            }
+        }
+
+        private void CloseClick(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

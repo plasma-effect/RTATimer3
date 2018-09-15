@@ -61,7 +61,8 @@
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.自己記録編集ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ターゲット確認ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.新ルート作成ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.新カテゴリ追加ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -347,7 +348,8 @@
             this.toolStripSeparator3,
             this.自己記録編集ToolStripMenuItem,
             this.ターゲット確認ToolStripMenuItem,
-            this.toolStripSeparator1,
+            this.toolStripMenuItem4,
+            this.toolStripSeparator5,
             this.新ルート作成ToolStripMenuItem,
             this.toolStripMenuItem3,
             this.新カテゴリ追加ToolStripMenuItem,
@@ -364,12 +366,14 @@
             this.toolStripMenuItem2.Name = "toolStripMenuItem2";
             this.toolStripMenuItem2.Size = new System.Drawing.Size(432, 38);
             this.toolStripMenuItem2.Text = "新規作成";
+            this.toolStripMenuItem2.Click += new System.EventHandler(this.CreateFileClick);
             // 
             // toolStripMenuItem1
             // 
             this.toolStripMenuItem1.Name = "toolStripMenuItem1";
             this.toolStripMenuItem1.Size = new System.Drawing.Size(432, 38);
             this.toolStripMenuItem1.Text = "ファイル読み込み";
+            this.toolStripMenuItem1.Click += new System.EventHandler(this.LoadFileClick);
             // 
             // toolStripSeparator3
             // 
@@ -390,10 +394,17 @@
             this.ターゲット確認ToolStripMenuItem.Text = "ターゲット変更";
             this.ターゲット確認ToolStripMenuItem.Click += new System.EventHandler(this.TargetCheckToolStripMenuItemClick);
             // 
-            // toolStripSeparator1
+            // toolStripMenuItem4
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(429, 6);
+            this.toolStripMenuItem4.Name = "toolStripMenuItem4";
+            this.toolStripMenuItem4.Size = new System.Drawing.Size(432, 38);
+            this.toolStripMenuItem4.Text = "カテゴリ・ルート変更";
+            this.toolStripMenuItem4.Click += new System.EventHandler(this.RouteChangeClick);
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(429, 6);
             // 
             // 新ルート作成ToolStripMenuItem
             // 
@@ -440,6 +451,7 @@
             this.終了ToolStripMenuItem.Name = "終了ToolStripMenuItem";
             this.終了ToolStripMenuItem.Size = new System.Drawing.Size(432, 38);
             this.終了ToolStripMenuItem.Text = "終了";
+            this.終了ToolStripMenuItem.Click += new System.EventHandler(this.CloseClick);
             // 
             // TimerForm
             // 
@@ -514,7 +526,6 @@
         private System.Windows.Forms.ToolStripMenuItem ファイルToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 自己記録編集ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ターゲット確認ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem 新ルート作成ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 新カテゴリ追加ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 目標タイム変更ToolStripMenuItem;
@@ -525,6 +536,8 @@
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
     }
 }
 
