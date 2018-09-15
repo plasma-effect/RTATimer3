@@ -387,7 +387,18 @@ namespace Timer
                 case Keys.Back:
                     KeyBackDown();
                     break;
+                case Keys.Escape:
+                    KeyEscapeDown();
+                    break;
             }
+        }
+
+        private void KeyEscapeDown()
+        {
+            AddRecord();
+            this.mainTimer.Text = "0:00:00.0";
+            this.segmentTimer.Text = "0:00:00";
+            ThreeUpdates();
         }
 
         /// <summary>
