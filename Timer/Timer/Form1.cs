@@ -470,6 +470,8 @@ namespace Timer
             if (this.nowsegment == this.segmentCount)
             {
                 this.bestPossibleTime.Text = "-:--:--.---";
+                this.mainTimer.Text = SpanToString(runprev);
+                this.segmentTimer.Text = SpanToString(runprev - (this.nowsegment == 1 ? TimeSpan.Zero : this.running[this.nowsegment - 2]));
             }
             else
             {
@@ -764,6 +766,20 @@ namespace Timer
             {
                 this.records[this.category][this.route].AddRecord(run, this.start);
                 this.running = null;
+                SaveFile(this.path);
+                var now = this.start;
+                using(var stream = new System.IO.StreamWriter($"snapshot{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00}.txt"))
+                {
+                    foreach(var i in Range(0, this.segmentNames.Length))
+                    {
+                        stream.WriteLine(this.segmentNames[i]);
+                        stream.WriteLine($"       Time {SpanToString(run[i])}");
+                        stream.WriteLine($"VS  My Best {SpanToString(run[i] - this.mypb[i])}");
+                        var s = run[i] - (i == 0 ? TimeSpan.Zero : run[i - 1]);
+                        stream.WriteLine($"VS Seg Best {SpanToString(s - this.mysb[i])}");
+                        stream.WriteLine($"    VS SoBS {SpanToString(run[i] - this.myssb[i])}");
+                    }
+                }
             }
         }
 
