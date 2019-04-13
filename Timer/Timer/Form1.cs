@@ -226,7 +226,7 @@ namespace Timer
         private void UpdatePB()
         {
             this.mysb = this.records[this.category][this.route].SegmentBests;
-            this.myssb = CumSum(this.mysb);
+            this.myssb = this.records[this.category][this.route].SumOfBestSegments;
             this.mypb = this.records[this.category][this.route].RouteBest;
             this.personalBest.Text = StrictSpanToString(this.records[this.category].PersonalBest);
             this.sumOfBestSegments.Text = StrictSpanToString(this.myssb.Last());
@@ -768,7 +768,7 @@ namespace Timer
                 this.running = null;
                 SaveFile(this.path);
                 var now = this.start;
-                using(var stream = new System.IO.StreamWriter($"snapshot{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00}.txt"))
+                using(var stream = new System.IO.StreamWriter($"result{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00}.txt"))
                 {
                     foreach(var i in Range(0, this.segmentNames.Length))
                     {
@@ -833,6 +833,61 @@ namespace Timer
         private void CloseClick(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void OutputDataClick(object sender, EventArgs e)
+        {
+            var now = DateTime.Now;
+            using (var stream = new System.IO.StreamWriter($"{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00}.txt"))
+            { 
+                foreach(var i in Range(0, this.segmentNames.Length))
+                {
+                    stream.WriteLine(this.segmentNames[i]);
+                    var s = this.mypb[i] - (i == 0 ? TimeSpan.Zero : this.mypb[i - 1]);
+                    stream.WriteLine($"Total Time: {StrictSpanToString(this.mypb[i])}");
+                    stream.WriteLine($"  Seg Time: {StrictSpanToString(s)}");
+                    stream.WriteLine($"VS    Sobs: {StrictSpanToString(this.mypb[i] - this.myssb[i])}");
+                    stream.WriteLine($"VS Segbest: {StrictSpanToString(s - this.mysb[i])}");
+                    stream.WriteLine();
+                }
+            }
+        }
+
+        private void OutputDataXLSMClick(object sender, EventArgs e)
+        {
+            var now = DateTime.Now;
+            var workbook = new ClosedXML.Excel.XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("record");
+            worksheet.Cell(1, 1).Value = "Segment Name";
+            worksheet.Cell(1, 2).Value = "Total Time";
+            worksheet.Cell(1, 3).Value = "VS Sobs";
+            worksheet.Cell(1, 4).Value = "Segment Time";
+            worksheet.Cell(1, 5).Value = "VS Segment Best";
+            foreach (var i in Range(0, this.segmentNames.Length))
+            {
+                var s = this.mypb[i] - (i == 0 ? TimeSpan.Zero : this.mypb[i - 1]);
+                worksheet.Cell(i + 2, 1).Value = this.segmentNames[i];
+                var times = new TimeSpan?[]
+                {
+                    this.mypb[i],
+                    this.mypb[i] - this.myssb[i],
+                    s,
+                    s - this.mysb[i]
+                };
+                foreach (var (time, index) in times.Indexed())
+                {
+                    if (time is TimeSpan t)
+                    {
+                        worksheet.Cell(i + 2, index + 2).Style.NumberFormat.Format = "hh:mm:ss.000";
+                        worksheet.Cell(i + 2, index + 2).Value = StrictSpanToString(t);
+                    }
+                    else
+                    {
+                        worksheet.Cell(i + 2, index + 2).Value = "--:--:--.---";
+                    }
+                }
+            }
+            workbook.SaveAs($"{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00}.xlsx");
         }
     }
 }

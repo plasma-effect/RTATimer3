@@ -132,6 +132,41 @@ namespace Timer
             }
         }
 
+        public TimeSpan?[] SumOfBestSegments
+        {
+            get
+            {
+                var ret = new TimeSpan?[this.SegmentName.Length];
+                foreach(var i in Utility.Range(0, this.SegmentName.Length))
+                {
+                    foreach(var rec in this.Records)
+                    {
+                        if (!rec[i].HasValue)
+                        {
+                            continue;
+                        }
+                        var prev = 1;
+                        for (var j = i - 1; j >= 0; --j, ++prev)
+                        {
+                            if (rec[j].HasValue)
+                            {
+                                break;
+                            }
+                        }
+                        if (prev > i)
+                        {
+                            ret[i] = Utility.Min(ret[i], rec[i]);
+                        }
+                        else
+                        {
+                            ret[i] = Utility.Min(ret[i], rec[i] - rec[i - prev] + ret[i - prev]);
+                        }
+                    }
+                }
+                return ret;
+            }
+        }
+
         /// <summary>
         /// 記録の数
         /// </summary>
