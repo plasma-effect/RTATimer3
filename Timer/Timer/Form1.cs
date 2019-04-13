@@ -856,38 +856,40 @@ namespace Timer
         private void OutputDataXLSMClick(object sender, EventArgs e)
         {
             var now = DateTime.Now;
-            var workbook = new ClosedXML.Excel.XLWorkbook();
-            var worksheet = workbook.Worksheets.Add("record");
-            worksheet.Cell(1, 1).Value = "Segment Name";
-            worksheet.Cell(1, 2).Value = "Total Time";
-            worksheet.Cell(1, 3).Value = "VS Sobs";
-            worksheet.Cell(1, 4).Value = "Segment Time";
-            worksheet.Cell(1, 5).Value = "VS Segment Best";
-            foreach (var i in Range(0, this.segmentNames.Length))
+            using (var workbook = new ClosedXML.Excel.XLWorkbook())
             {
-                var s = this.mypb[i] - (i == 0 ? TimeSpan.Zero : this.mypb[i - 1]);
-                worksheet.Cell(i + 2, 1).Value = this.segmentNames[i];
-                var times = new TimeSpan?[]
+                var worksheet = workbook.Worksheets.Add("record");
+                worksheet.Cell(1, 1).Value = "Segment Name";
+                worksheet.Cell(1, 2).Value = "Total Time";
+                worksheet.Cell(1, 3).Value = "VS Sobs";
+                worksheet.Cell(1, 4).Value = "Segment Time";
+                worksheet.Cell(1, 5).Value = "VS Segment Best";
+                foreach (var i in Range(0, this.segmentNames.Length))
                 {
+                    var s = this.mypb[i] - (i == 0 ? TimeSpan.Zero : this.mypb[i - 1]);
+                    worksheet.Cell(i + 2, 1).Value = this.segmentNames[i];
+                    var times = new TimeSpan?[]
+                    {
                     this.mypb[i],
                     this.mypb[i] - this.myssb[i],
                     s,
                     s - this.mysb[i]
-                };
-                foreach (var (time, index) in times.Indexed())
-                {
-                    if (time is TimeSpan t)
+                    };
+                    foreach (var (time, index) in times.Indexed())
                     {
-                        worksheet.Cell(i + 2, index + 2).Style.NumberFormat.Format = "hh:mm:ss.000";
-                        worksheet.Cell(i + 2, index + 2).Value = StrictSpanToString(t);
-                    }
-                    else
-                    {
-                        worksheet.Cell(i + 2, index + 2).Value = "--:--:--.---";
+                        if (time is TimeSpan t)
+                        {
+                            worksheet.Cell(i + 2, index + 2).Style.NumberFormat.Format = "hh:mm:ss.000";
+                            worksheet.Cell(i + 2, index + 2).Value = StrictSpanToString(t);
+                        }
+                        else
+                        {
+                            worksheet.Cell(i + 2, index + 2).Value = "--:--:--.---";
+                        }
                     }
                 }
+                workbook.SaveAs($"{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00}.xlsx");
             }
-            workbook.SaveAs($"{now.Year}{now.Month:00}{now.Day:00}{now.Hour:00}{now.Minute:00}{now.Second:00}.xlsx");
         }
     }
 }
