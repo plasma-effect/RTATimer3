@@ -774,10 +774,10 @@ namespace Timer
                     {
                         stream.WriteLine(this.segmentNames[i]);
                         stream.WriteLine($"       Time {SpanToString(run[i])}");
-                        stream.WriteLine($"VS  My Best {SpanToString(run[i] - this.mypb[i])}");
+                        stream.WriteLine($"VS  My Best {(run[i] < this.mypb[i] ? '-' : '+')}{SpanToString(run[i] - this.mypb[i])}");
                         var s = run[i] - (i == 0 ? TimeSpan.Zero : run[i - 1]);
-                        stream.WriteLine($"VS Seg Best {SpanToString(s - this.mysb[i])}");
-                        stream.WriteLine($"    VS SoBS {SpanToString(run[i] - this.myssb[i])}");
+                        stream.WriteLine($"VS Seg Best {(s < this.mysb[i] ? '-' : '+')}{SpanToString(s - this.mysb[i])}");
+                        stream.WriteLine($"    VS SoBS {(run[i] < this.myssb[i] ? '-' : '+')}{SpanToString(run[i] - this.myssb[i])}");
                     }
                 }
             }
