@@ -120,6 +120,7 @@ namespace Timer
                         if (maxlen < size)
                         {
                             ret = rec.Records;
+                            maxlen = size;
                         }
                         else if (maxlen == size && rec[size - 1] < ret[size - 1])
                         {
