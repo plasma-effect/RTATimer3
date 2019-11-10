@@ -96,19 +96,35 @@ namespace Timer
             get
             {
                 var len = this.SegmentName.Length;
+                var maxlen = 0;
                 var ret = new TimeSpan?[len];
                 foreach (var rec in this.Records)
                 {
-                    if (ret.Last() is TimeSpan sp)
+                    if (ret[len - 1] is TimeSpan sp)
                     {
-                        if (sp > rec[len - 1])
+                        if (rec[len - 1] < ret[len - 1])
                         {
                             ret = rec.Records;
                         }
                     }
-                    else if (rec[len - 1] is TimeSpan)
+                    else
                     {
-                        ret = rec.Records;
+                        var size = 0;
+                        foreach(var i in Enumerable.Range(0, len))
+                        {
+                            if(rec[i] is TimeSpan)
+                            {
+                                size = i + 1;
+                            }
+                        }
+                        if (maxlen < size)
+                        {
+                            ret = rec.Records;
+                        }
+                        else if (maxlen == size && rec[size - 1] < ret[size - 1])
+                        {
+                            ret = rec.Records;
+                        }
                     }
                 }
                 return ret;
